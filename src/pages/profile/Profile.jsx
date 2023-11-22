@@ -8,12 +8,14 @@ import { Post } from "../post/Post";
 import Loader from "../../components/loader/Loader";
 import mango from "../../assets/mango.png";
 import book from "../../assets/book.png";
+import NewChatModal from "./components/NewChatModal.";
 
 Modal.setAppElement("#root");
 
 export const Profile = () => {
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const userID = localStorage.getItem("uidselect");
 
   let { data: userData } = useQuery("userData", () =>
@@ -42,6 +44,9 @@ export const Profile = () => {
     setIsOpen(true);
   };
 
+  const openMessageModal = () => setIsMessageModalOpen(true);
+  const closeMessageModal = () => setIsMessageModalOpen(false);
+
   const closeModal = () => setIsOpen(false);
 
   return (
@@ -54,8 +59,7 @@ export const Profile = () => {
           </div>
           <div className="buttons-column">
             <div className="buttons">
-              <button>Siguiendo</button>
-              <button>Enviar mensaje</button>
+              <button onClick={openMessageModal}>Enviar mensaje</button>
             </div>
             <div className="list">
               <p>{userData?.Habilidades}</p>
@@ -110,6 +114,7 @@ export const Profile = () => {
           />
         )}
       </Modal>
+      <NewChatModal isOpen={isMessageModalOpen} onClose={closeMessageModal} />
     </div>
   );
 };

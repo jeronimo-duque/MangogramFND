@@ -1,26 +1,75 @@
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import { Nav } from "../../components/nav/Nav";
 import { UserChat } from "./components/UserChat";
 import "./Chats.css";
 
 export const Chats = () => {
+  const [currentChat, setCurrentChat] = useState(null);
+  const [currentChatData, setCurrentChatData] = useState(null);
   const [currentMessage, setCurrentMessage] = useState("");
-  const userID = localStorage.getItem("uid"); // Suponemos que el ID del usuario está almacenado en localStorage
+  const userID = localStorage.getItem("uid");
 
   // Fetch chats using react-query
   const {
     data: chatsData,
     isLoading,
     isError,
-  } = useQuery("chats", () =>
-    axios.get(`https://mangogram.onrender.com/api/chats/${userID}`)
+    refetch,
+  } = useQuery(
+    "chats",
+    () => axios.get(`https://mangogram.onrender.com/api/chats/${userID}`),
+    {
+      refetchInterval: 2000,
+      onSuccess: (data) => {
+        // Encuentra el chat actualizado basándose en currentChat
+        const updatedCurrentChat = data?.data.find(
+          (chat) => chat._id === currentChat
+        );
+        // Si se encuentra el chat actualizado, actualiza el estado
+        if (updatedCurrentChat) {
+          setCurrentChatData(updatedCurrentChat);
+        }
+      },
+    }
+  );
+
+  const sendMessageMutation = useMutation(
+    (newMessage) => {
+      return axios.post(
+        `https://mangogram.onrender.com/api/chats/mensajes/${currentChat}`,
+        newMessage
+      );
+    },
+    {
+      onSuccess: () => {
+        // Refetch chats query para obtener los mensajes actualizados
+        refetch();
+        setCurrentMessage(""); // Limpiar el input después de enviar el mensaje
+      },
+      // Puedes manejar los errores como prefieras aquí
+      onError: (error) => {
+        console.error("Error al enviar el mensaje:", error);
+      },
+    }
   );
 
   // Handler para el envío de mensajes
-  const sendMessage = async () => {
-    if (currentMessage.trim() === "") return;
+  const sendMessage = () => {
+    if (currentMessage.trim() === "") return; // No enviar mensajes vacíos
+
+    const newMessage = {
+      texto: currentMessage,
+      enviadoPor: userID,
+    };
+
+    sendMessageMutation.mutate(newMessage);
+  };
+
+  const selectChat = (chat) => {
+    setCurrentChat(chat._id);
+    setCurrentChatData(chat);
   };
 
   if (isLoading) return <div>Cargando chats...</div>;
@@ -31,50 +80,65 @@ export const Chats = () => {
       <Nav />
       <div className="chats-container">
         <div className="chat__nav scroll">
-          {chatsData?.data.map((chat, index) => (
-            <UserChat
-              key={index}
-              profile={chat.participantes[0]?.ProfilePhoto}
-              name={chat.participantes[0]?.Nombre}
-            />
-          ))}
-        </div>
-        <div className="chat-expand">
-          <div className="chat-expand__header">
-            <div className="chat-expand__header__title">
-              <img
-                className="user-chat__imagen"
-                src={ejemplos[0]?.imgUsuario}
-              />
-              <h3 className="user-chat__titulo">{ejemplos[0].user}</h3>
-            </div>
-          </div>
-          <div className="chat-expand__chat scroll">
-            {chats.map((chat, index) => {
-              if (chat.user != "usuario") {
-                return (
-                  <div key={index} className="chat__text chat__text--other">
-                    {chat.message}
-                  </div>
-                );
-              }
+          {chatsData?.data.map((chat, index) => {
+            // Encuentra el participante que no es el usuario actual
+            const otherParticipant = chat.participantes.find(
+              (p) => p._id !== userID
+            );
 
-              return (
-                <div key={index} className="chat__text">
-                  {chat.message}
-                </div>
-              );
-            })}
-          </div>
-          <input
-            className="input__text"
-            type="text"
-            placeholder="Say something"
-            value={currentMessage}
-            onChange={(e) => setCurrentMessage(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && sendMessage()} // Enviar mensaje al presionar Enter
-          />
+            // Solo renderiza el UserChat si existe otro participante
+            return otherParticipant ? (
+              <UserChat
+                key={index}
+                profile={otherParticipant.ProfilePhoto}
+                name={otherParticipant.Nombre}
+                onClick={() => selectChat(chat)}
+              />
+            ) : null;
+          })}
         </div>
+        {currentChat && (
+          <div className="chat-expand">
+            <div className="chat-expand__header">
+              <div className="chat-expand__header__title">
+                <img
+                  className="user-chat__imagen"
+                  src={
+                    currentChatData.participantes.find((p) => p._id !== userID)
+                      ?.ProfilePhoto
+                  }
+                  alt="User"
+                />
+                <h3 className="user-chat__titulo">
+                  {
+                    currentChatData.participantes.find((p) => p._id !== userID)
+                      ?.Nombre
+                  }
+                </h3>
+              </div>
+            </div>
+            <div className="chat-expand__chat scroll">
+              {currentChatData.mensajes.map((mensaje, index) => (
+                <div
+                  key={index}
+                  className={`chat__text ${
+                    mensaje.enviadoPor === userID ? "" : "chat__text--other"
+                  }`}
+                >
+                  {mensaje.texto}
+                </div>
+              ))}
+            </div>
+            <input
+              className="input__text"
+              type="text"
+              placeholder="Say something"
+              value={currentMessage}
+              onChange={(e) => setCurrentMessage(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
