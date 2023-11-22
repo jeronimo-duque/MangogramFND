@@ -1,0 +1,21 @@
+.inicio__form-container {
+  background-color: #ff9040;
+  padding: 32px;
+  border-radius: 66px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inicio__form-container__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+}
+
+.inicio__form-container .button,
+.inicio__form-container p {
+  align-self: center;
+}

@@ -1,0 +1,114 @@
+/* Estilos para el contenedor principal */
+.home-item {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 900px;
+  width: 100%;
+  min-width: 300px;
+}
+
+/* Contenedor del usuario */
+.home-post__user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+/* Imagen del usuario */
+.home-post__user img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Nombre del usuario */
+.home-post__user p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Contenedor del post */
+.home-post {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 29px;
+  background: #fff6d7;
+  padding: 24px;
+}
+
+/* Imagen principal del post */
+.main-image {
+  width: 80%;
+  margin: auto;
+  border-radius: 34px;
+}
+
+/* Contenedor de información del post */
+.home-post__info {
+  display: flex;
+  justify-content: space-between;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+}
+
+/* Grupo de iconos en una esquina */
+.home-post__info > div {
+  display: flex;
+  gap: 10px;
+}
+
+/* Iconos individuales */
+.home-post__info img {
+  width: 35px;
+  object-fit: contain;
+}
+
+/* Estilos para el contenedor de estadísticas y comentarios */
+.stats {
+  margin-top: 24px;
+}
+
+/* Estilos para el texto de los comentarios */
+.comments-text {
+  background-color: #ff9040;
+  border-radius: 0 0 19px 19px;
+  padding: 12px;
+  width: 50%;
+}
+
+/* Estilos adicionales para el layout */
+.column {
+  margin-top: 80px;
+}
+
+.Modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  background: white;
+  padding: 20px;
+  z-index: 1000;
+  overflow-y: auto; /* Para hacer scroll si el contenido es muy largo */
+}
+
+.ReactModal__Content {
+  width: 90vw;
+  max-width: none;
+}
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 999;
+}

@@ -1,0 +1,15 @@
+.user-chat {
+  width: 200px;
+  display: flex;
+  border-bottom: 3px solid rgb(0, 0, 0, 0.3);
+}
+
+.user-chat__imagen {
+  width: 64px;
+  height: auto;
+  object-fit: contain;
+}
+
+.user-chat__titulo {
+  font-size: 16px;
+}

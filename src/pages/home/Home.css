@@ -1,0 +1,13 @@
+.home {
+  display: grid;
+  grid-template-columns: 100px 1fr 200px;
+}
+
+.item-user {
+  display: flex;
+  gap: 12px;
+}
+
+.column {
+  margin-top: 80px;
+}

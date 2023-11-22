@@ -1,0 +1,28 @@
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 16px;
+}
+
+/* Cada elemento Flex */
+.flex-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* Estilo de la imagen */
+.item-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Estilo del nombre */
+.item-name {
+  font-size: 16px;
+}

@@ -1,0 +1,8 @@
+.notificaciones {
+  display: grid;
+  grid-template-columns: 0.3fr 1fr;
+}
+
+.notificaciones-content {
+  margin-top: 64px;
+}
