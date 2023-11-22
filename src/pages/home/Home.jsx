@@ -12,10 +12,13 @@ export const Home = () => {
     isLoading,
     isError,
     error,
-  } = useQuery("publicaciones", () =>
-    axios
-      .get("https://mangogram.onrender.com/api/publicaciones")
-      .then((res) => res.data)
+  } = useQuery(
+    "publicaciones",
+    () =>
+      axios
+        .get("https://mangogram.onrender.com/api/publicaciones")
+        .then((res) => res.data),
+    { refetchInterval: 2000 }
   );
 
   // Manejo de carga y error
