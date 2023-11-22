@@ -8,6 +8,7 @@ import deleteIcon from "../../assets/delete.png";
 import "./CardPublicacion.css";
 import { useState } from "react";
 import { Post } from "../../pages/post/Post";
+import { useNavigate } from "react-router-dom";
 
 const CardPublicacion = ({
   IDPublicacion,
@@ -36,10 +37,17 @@ const CardPublicacion = ({
     }
   };
 
+  const navigate = useNavigate();
+
+  const handleProfileClick = (uid) => {
+    localStorage.setItem("uidselect", uid);
+    navigate("/perfil");
+  };
+
   return (
     <div className="home-item">
       <div className="home-post__user">
-        <div>
+        <div onClick={() => handleProfileClick(IDUsuarioPublicacion)}>
           <img src={profilePhoto} alt={username} className="user-image" />
           <p>{username}</p>
         </div>

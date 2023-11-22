@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import "./UserRecomend.css";
 import Loader from "../../../components/loader/Loader";
+import { useNavigate } from "react-router-dom";
 
 export const UserRecomend = () => {
   const {
@@ -14,6 +15,13 @@ export const UserRecomend = () => {
       .then((res) => res.data)
   );
 
+  const navigate = useNavigate();
+
+  const handleProfileClick = (uid) => {
+    localStorage.setItem("uidselect", uid);
+    navigate("/perfil");
+  };
+
   if (isLoading) return <Loader />;
 
   if (isError) return <div>Error al cargar la lista de usuarios</div>;
@@ -23,7 +31,11 @@ export const UserRecomend = () => {
       {users.map((user) => {
         if (user._id != localStorage.getItem("uid"))
           return (
-            <div key={user._id} className="flex-item">
+            <div
+              key={user._id}
+              onClick={() => handleProfileClick(user._id)}
+              className="flex-item"
+            >
               <img
                 src={user.ProfilePhoto}
                 alt={user.Nombre}

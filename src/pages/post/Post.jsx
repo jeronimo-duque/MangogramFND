@@ -43,6 +43,7 @@ export const Post = ({ mainImage, comentarios, onClose, IDPublicacion }) => {
           {comentarios.map((comentario, index) => (
             <ChatComment
               key={index}
+              id={comentario.IDUsuario._id}
               usuario={comentario.IDUsuario.ProfilePhoto}
               nombre={comentario.IDUsuario.Nombre}
               mensaje={comentario.mensaje}

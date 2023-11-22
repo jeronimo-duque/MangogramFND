@@ -14,19 +14,12 @@ Modal.setAppElement("#root");
 export const Profile = () => {
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [modalIsOpen, setIsOpen] = useState(false);
-  const userID = localStorage.getItem("uid");
+  const userID = localStorage.getItem("uidselect");
 
-  // Fetch user data using react-query
-  const {
-    data: { data: userData },
-  } = useQuery(
-    "userData",
-    () => axios.get(`https://mangogram.onrender.com/api/usuarios/${userID}`),
-    {
-      enabled: !!userID,
-    }
+  let { data: userData } = useQuery("userData", () =>
+    axios.get(`https://mangogram.onrender.com/api/usuarios/${userID}`)
   );
-
+  userData = userData != undefined ? userData.data : userData;
   console.log(userData);
 
   const {
@@ -36,7 +29,7 @@ export const Profile = () => {
   } = useQuery("profileData", () =>
     axios.get(
       `https://mangogram.onrender.com/api/publicaciones/user/${localStorage.getItem(
-        "uid"
+        "uidselect"
       )}`
     )
   );
@@ -57,7 +50,7 @@ export const Profile = () => {
       <div>
         <div className="profile-header">
           <div className="column image-column">
-            <img src={userData.ProfilePhoto} alt={userData.Nombre} />
+            <img src={userData?.ProfilePhoto} alt={userData?.Nombre} />
           </div>
           <div className="buttons-column">
             <div className="buttons">
@@ -65,7 +58,7 @@ export const Profile = () => {
               <button>Enviar mensaje</button>
             </div>
             <div className="list">
-              <p>{userData.Habilidades}</p>
+              <p>{userData?.Habilidades}</p>
             </div>
           </div>
           <div className="column info-column">
@@ -73,9 +66,9 @@ export const Profile = () => {
               <img src={book} alt="Additional info" />
               <h2>Mangofía</h2>
             </div>
-            <p>{userData.Descripcion}</p>
+            <p>{userData?.Descripcion}</p>
             <div className="info-column__extend">
-              <p>{userData.Nombre}</p>
+              <p>{userData?.Nombre}</p>
               <img src={mango} />
               <ul>
                 <li>Public</li>

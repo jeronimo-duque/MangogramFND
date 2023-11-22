@@ -50,6 +50,11 @@ export const Nav = () => {
     }
   );
 
+  const handleProfileClick = () => {
+    const uid = localStorage.getItem("uid");
+    localStorage.setItem("uidselect", uid);
+  };
+
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
@@ -75,7 +80,7 @@ export const Nav = () => {
         <Link to="/chat">
           <img src={chat} alt="Chat" />
         </Link>
-        <Link to="/perfil">
+        <Link to="/perfil" onClick={handleProfileClick}>
           <img src={persona} alt="Perfil" />
         </Link>
         <img

@@ -1,81 +1,41 @@
+import { useState } from "react";
+import { useQuery } from "react-query";
+import axios from "axios";
 import { Nav } from "../../components/nav/Nav";
-import perfil from "../../assets/perfil.png";
 import { UserChat } from "./components/UserChat";
 import "./Chats.css";
 
-const ejemplos = [
-  {
-    imgUsuario: perfil,
-    user: "Messi Ronaldo Ocoro",
-  },
-  {
-    imgUsuario: perfil,
-    user: "Messi Ronaldo Ocoro",
-  },
-  {
-    imgUsuario: perfil,
-    user: "Messi Ronaldo Ocoro",
-  },
-  {
-    imgUsuario: perfil,
-    user: "Messi Ronaldo Ocoro",
-  },
-  {
-    imgUsuario: perfil,
-    user: "Messi Ronaldo Ocoro",
-  },
-  {
-    imgUsuario: perfil,
-    user: "Messi Ronaldo Ocoro",
-  },
-  {
-    imgUsuario: perfil,
-    user: "Messi Ronaldo Ocoro",
-  },
-  {
-    imgUsuario: perfil,
-    user: "Messi Ronaldo Ocoro",
-  },
-  {
-    imgUsuario: perfil,
-    user: "Messi Ronaldo Ocoro",
-  },
-];
-
-const chats = [
-  {
-    message: "Chichón!",
-    user: "usuario",
-  },
-  {
-    message: "Hablamelo, cabezón",
-    user: "otro",
-  },
-  {
-    message: "JAJAJAJAJA",
-    user: "otro",
-  },
-  {
-    message: "Va a jugar o que?",
-    user: "usuario",
-  },
-  {
-    message: "Vamos al lol :)",
-    user: "usuario",
-  },
-];
-
 export const Chats = () => {
+  const [currentMessage, setCurrentMessage] = useState("");
+  const userID = localStorage.getItem("uid"); // Suponemos que el ID del usuario está almacenado en localStorage
+
+  // Fetch chats using react-query
+  const {
+    data: chatsData,
+    isLoading,
+    isError,
+  } = useQuery("chats", () =>
+    axios.get(`https://mangogram.onrender.com/api/chats/${userID}`)
+  );
+
+  // Handler para el envío de mensajes
+  const sendMessage = async () => {
+    if (currentMessage.trim() === "") return;
+  };
+
+  if (isLoading) return <div>Cargando chats...</div>;
+  if (isError) return <div>Error al cargar los chats</div>;
+
   return (
     <div className="chats">
       <Nav />
       <div className="chats-container">
         <div className="chat__nav scroll">
-          {ejemplos?.map((chat, index) => (
+          {chatsData?.data.map((chat, index) => (
             <UserChat
               key={index}
-              profile={chat?.imgUsuario}
-              name={chat?.user}
+              profile={chat.participantes[0]?.ProfilePhoto}
+              name={chat.participantes[0]?.Nombre}
             />
           ))}
         </div>
@@ -110,6 +70,9 @@ export const Chats = () => {
             className="input__text"
             type="text"
             placeholder="Say something"
+            value={currentMessage}
+            onChange={(e) => setCurrentMessage(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && sendMessage()} // Enviar mensaje al presionar Enter
           />
         </div>
       </div>
